@@ -99,89 +99,93 @@ def get_highest_education(extracted_info):
 
 
 def assign_candidate_score(pdf_path, job_details):
-    """
-    Assigns a score (out of 50) to the candidate based on extracted CV details and job requirements.
+    try:
+        """
+        Assigns a score (out of 50) to the candidate based on extracted CV details and job requirements.
 
-    Args:
-        extracted_info (dict): Extracted CV details.
-        job_details (dict): Dictionary containing job requirements (education, experience, skills).
+        Args:
+            extracted_info (dict): Extracted CV details.
+            job_details (dict): Dictionary containing job requirements (education, experience, skills).
 
-    Returns:
-        int: Total candidate score out of 50, or 0 if they don’t meet the education requirement.
-    """
+        Returns:
+            int: Total candidate score out of 50, or 0 if they don’t meet the education requirement.
+        """
 
-    extracted_info = extract_entities_with_gemini(pdf_path)
+        extracted_info = extract_entities_with_gemini(pdf_path)
 
-    if not extracted_info:
-        return 0  # If extraction failed, return 0
+        if not extracted_info:
+            return 0  # If extraction failed, return 0
 
-    # Extract job requirements
-    required_education = job_details.get("education", "").lower()
-    required_experience = job_details.get("experience", 0)
-    required_skills = set(map(str.lower, job_details.get("skills", [])))
+        # Extract job requirements
+        required_education = job_details.get("education", "").lower()
+        required_experience = job_details.get("experience", 0)
+        required_skills = set(map(str.lower, job_details.get("skills", [])))
 
-    # 1. Get highest education level
-    # highest_education = get_highest_education(extracted_info)
+        # 1. Get highest education level
+        # highest_education = get_highest_education(extracted_info)
 
-    highest_education = get_highest_education(extracted_info)
+        highest_education = get_highest_education(extracted_info)
 
-    # 2. Check if education is related
-    # if not is_related_degree(highest_education):
-    #     return 0
+        # 2. Check if education is related
+        # if not is_related_degree(highest_education):
+        #     return 0
 
-    # Map education levels for comparison
-    education_levels = {"Diploma": 0, "Bachelor": 1, "Master": 2, "PhD": 3}
-    min_required_rank = education_levels.get(required_education.capitalize(), 0)
-    candidate_rank = education_levels.get(highest_education, -1)
+        # Map education levels for comparison
+        education_levels = {"Diploma": 0, "Bachelor": 1, "Master": 2, "PhD": 3}
+        min_required_rank = education_levels.get(required_education.capitalize(), 0)
+        candidate_rank = education_levels.get(highest_education, -1)
 
-    # 2. Education Requirement Check (Eliminator)
-    # if candidate_rank < min_required_rank:
-    #     return 0  # Candidate is automatically disqualified
+        # 2. Education Requirement Check (Eliminator)
+        # if candidate_rank < min_required_rank:
+        #     return 0  # Candidate is automatically disqualified
 
-    # 3. Higher Education Bonus (Max 5 points)
-    score = 0
-    if candidate_rank > min_required_rank:
-        if candidate_rank == 3 and min_required_rank == 2:  # PhD when Master's is required
+        # 3. Higher Education Bonus (Max 5 points)
+        score = 0
+        if candidate_rank > min_required_rank:
+            if candidate_rank == 3 and min_required_rank == 2:  # PhD when Master's is required
+                score += 5
+            elif candidate_rank == 2 and min_required_rank == 1:  # Master's when Bachelor's is required
+                score += 3
+
+        # 4. Work Experience (Max 25 points)
+        experience = extracted_info.get("Work Experience", [])
+        years_of_experience = 0
+
+        for job in experience:
+            match = re.search(r"(\d+)\s*years?", job, re.IGNORECASE)
+            if match:
+                years_of_experience = max(years_of_experience, int(match.group(1)))
+
+        if years_of_experience >= 5:
+            score += 25
+        elif 3 <= years_of_experience < 5:
+            score += 20
+        elif 1 <= years_of_experience < 3:
+            score += 12
+        elif years_of_experience < 1:
             score += 5
-        elif candidate_rank == 2 and min_required_rank == 1:  # Master's when Bachelor's is required
-            score += 3
 
-    # 4. Work Experience (Max 25 points)
-    experience = extracted_info.get("Work Experience", [])
-    years_of_experience = 0
+        # 5. Skills Matching (Max 12.5 points)
+        candidate_skills = set(map(str.lower, extracted_info.get("Skills", [])))
+        matching_skills = required_skills.intersection(candidate_skills)
+        skill_score = min(len(matching_skills) * 2.5, 12.5)  # 2.5 points per matching skill
+        score += skill_score
 
-    for job in experience:
-        match = re.search(r"(\d+)\s*years?", job, re.IGNORECASE)
-        if match:
-            years_of_experience = max(years_of_experience, int(match.group(1)))
+        # 6. Contact Details (Max 7.5 points)
+        email = extracted_info.get("Email address")
+        phone = extracted_info.get("Phone number")
+        if email and phone:
+            print("Email and phone found")
+            score += 7.5
+        elif email or phone:
+            print("Email or phone found")
+            score += 5
 
-    if years_of_experience >= 5:
-        score += 25
-    elif 3 <= years_of_experience < 5:
-        score += 20
-    elif 1 <= years_of_experience < 3:
-        score += 12
-    elif years_of_experience < 1:
-        score += 5
-
-    # 5. Skills Matching (Max 12.5 points)
-    candidate_skills = set(map(str.lower, extracted_info.get("Skills", [])))
-    matching_skills = required_skills.intersection(candidate_skills)
-    skill_score = min(len(matching_skills) * 2.5, 12.5)  # 2.5 points per matching skill
-    score += skill_score
-
-    # 6. Contact Details (Max 7.5 points)
-    email = extracted_info.get("Email address")
-    phone = extracted_info.get("Phone number")
-    if email and phone:
-        print("Email and phone found")
-        score += 7.5
-    elif email or phone:
-        print("Email or phone found")
-        score += 5
-
-    print('score:', score)
-    return round(score, 2)  # Round to 2 decimal places
+        print('score:', score)
+        return round(score, 2)  # Round to 2 decimal places
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return 0
 
 
 def is_related_degree(degree):
