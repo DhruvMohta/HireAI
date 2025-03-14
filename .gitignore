@@ -5,3 +5,6 @@ __pycache__/
 .venv
 
 backend/venv
+backend/call_results.csv
+backend/pros_cons.txt
+backend/instance/jobsite.db
