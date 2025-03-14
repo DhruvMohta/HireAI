@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/applications.css";
 import ApplicatioCard from './ApplicationCard';
+import { API_URL } from '../lib/constants';
 
 export default function AllApplications () {
     const [applications, setApplications] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/applications")
+        fetch(`${API_URL}/api/applications`)
             .then((res) => res.json())
             .then((data) => setApplications(data))
             .catch((error) => console.error('Error fetching applications:', error));
     }, []);
 
     const deleteApplication = (id) => {
-        fetch(`http://127.0.0.1:5000/api/applications/${id}`, {
+        fetch(`${API_URL}/api/applications/${id}`, {
             method: 'DELETE',
         })
         .then(response => {

@@ -5,9 +5,10 @@
 //   { title: 'UX Designer', location: 'Remote', description: 'Design user interfaces and improve user experience.' },
 // ];
 
+import { API_URL } from '../lib/constants';
 import type { JobOffer } from '../lib/types';
 
-const jobOffers:JobOffer[] = await fetch('http://127.0.0.1:5000/api/jobs').then((res) => res.json());
+const jobOffers:JobOffer[] = await fetch(`${API_URL}/api/jobs`).then((res) => res.json());
 
 export const title = "Job Offers";
 ---

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import type { JobOffer } from '../lib/types';
 import "../styles/jobApplication.css";
+import { API_URL } from '../lib/constants';
 
 const JobApplication = ( { id } ) => {
     const [jobOffer, setJobOffer] = useState(null);
@@ -10,7 +11,7 @@ const JobApplication = ( { id } ) => {
     useEffect(() => {
         const fetchJobOffer = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/jobs/${id}`);
+                const response = await fetch(`${API_URL}/api/jobs/${id}`);
                 const data = await response.json();
                 setJobOffer(data);
             } catch (error) {
@@ -32,7 +33,7 @@ const JobApplication = ( { id } ) => {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch(`http://127.0.0.1:5000/apply/${id}`, {
+            const response = await fetch(`${API_URL}/apply/${id}`, {
                 method: 'POST',
                 body: formData,
             });

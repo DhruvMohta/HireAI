@@ -1,10 +1,11 @@
 ---
 import type { Application } from '../lib/types';
+import { API_URL } from '../lib/constants';
 
 const { id } = Astro.params;
 
 // Fetch the specific application data
-const application: Application = await fetch(`http://127.0.0.1:5000/api/applications/${id}`).then((res) => res.json());
+const application: Application = await fetch(`${API_URL}/api/applications/${id}`).then((res) => res.json());
 ---
 
 <div class="application-container">

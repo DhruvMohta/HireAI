@@ -1,10 +1,11 @@
 ---
 import type { JobOffer } from '../lib/types';
 import astroLogo from '../assets/astro.svg';
+import { API_URL } from '../lib/constants';
 
 const {id} = Astro.params;
 
-const jobOffer:JobOffer =  await fetch(`http://127.0.0.1:5000/api/jobs/${id}`).then(res => res.json());
+const jobOffer:JobOffer =  await fetch(`${API_URL}/api/jobs/${id}`).then(res => res.json());
 const {
     title,
     location,
