@@ -1,11 +1,15 @@
 ---
-const jobOffers = [
-  { title: 'Software Engineer', location: 'New York, NY', description: 'Develop and maintain web applications.' },
-  { title: 'Product Manager', location: 'San Francisco, CA', description: 'Oversee product development from ideation to launch.' },
-  { title: 'UX Designer', location: 'Remote', description: 'Design user interfaces and improve user experience.' },
-];
+// const jobOffers = [
+//   { title: 'Software Engineer', location: 'New York, NY', description: 'Develop and maintain web applications.' },
+//   { title: 'Product Manager', location: 'San Francisco, CA', description: 'Oversee product development from ideation to launch.' },
+//   { title: 'UX Designer', location: 'Remote', description: 'Design user interfaces and improve user experience.' },
+// ];
 
-export const title = "Senior Software Engineer";
+import type { JobOffer } from '../lib/types';
+
+const jobOffers:JobOffer[] = await fetch('http://127.0.0.1:5000/api/jobs').then((res) => res.json());
+
+export const title = "Job Offers";
 ---
 
 <div class="container">
@@ -16,7 +20,7 @@ export const title = "Senior Software Engineer";
         <h2>{job.title}</h2>
         <p class="location"><span class="icon">📍</span> {job.location}</p>
         <p class="description">{job.description}</p>
-        <button class="apply-btn" onclick={`window.location.href='/job/${index}/info'`}>Apply Now</button>
+        <button class="apply-btn" onclick={`window.location.href='/jobs/${job.id}/info'`}>Apply Now</button>
       </div>
     ))}
   </div>

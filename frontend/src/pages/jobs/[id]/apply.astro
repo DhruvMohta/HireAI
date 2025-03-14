@@ -1,5 +1,5 @@
 ---
-import JobApplication from '../../../components/JobApplication.astro';
+import JobApplication from '../../../components/JobApplication';
 import Layout from '../../../layouts/Layout.astro';
 
 const { id } = Astro.params;
@@ -103,5 +103,5 @@ export async function getStaticPaths() {
 ---
 
 <Layout>
-    <JobApplication job_id={id}/>
+    <JobApplication id={id} client:load />
 </Layout>

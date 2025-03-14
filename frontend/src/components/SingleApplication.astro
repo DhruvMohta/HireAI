@@ -1,0 +1,311 @@
+---
+import type { Application } from '../lib/types';
+
+const { id } = Astro.params;
+
+// Fetch the specific application data
+const application: Application = await fetch(`http://127.0.0.1:5000/api/applications/${id}`).then((res) => res.json());
+---
+
+<div class="application-container">
+    <div class="back-nav">
+        <a href="/applications" class="back-link">← Back to All Applications</a>
+    </div>
+
+    <div class="application-detail">
+        <div class="main-header">
+            <h1>{application.job_title}</h1>
+            <span class={`status-badge status-${application.status.toLowerCase()}`}>
+                {application.status}
+            </span>
+        </div>
+
+        <div class="detail-section">
+            <h2>Job Details</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="label">Location:</span>
+                    <span>{application.job_location}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="label">Type:</span>
+                    <span>{application.job_type}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="label">Experience Level:</span>
+                    <span>{application.experience_level}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="label">Date Applied:</span>
+                    <span>{new Date(application.date_applied).toLocaleDateString()}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h2>Applicant Information</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="label">Name:</span>
+                    <span>{application.first_name} {application.last_name}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="label">Email:</span>
+                    <span>{application.email}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="label">Phone:</span>
+                    <span>{application.phone_number}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h2>Match Score</h2>
+            <div class="score-container">
+                <div class="score-value-large">{application.score}%</div>
+                <div class="score-bar">
+                    <div class="score-fill" style={`width: ${application.score}%`}></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions-container">
+            {application.cv_path && (
+                <a href={application.cv_path} class="btn primary" target="_blank">
+                    View CV
+                </a>
+            )}
+            {application.status === "Pending" && (
+                <div class="status-actions">
+                    <button class="btn success">Accept</button>
+                    <button class="btn danger">Reject</button>
+                    <button class="btn secondary">Schedule Interview</button>
+                </div>
+            )}
+        </div>
+    </div>
+</div>
+
+<style>
+    .application-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .back-nav {
+        margin-bottom: 1.5rem;
+    }
+    
+    .back-link {
+        color: #4a5568;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    
+    .back-link:hover {
+        color: #2d3748;
+    }
+    
+    .application-detail {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .main-header {
+        padding: 2rem;
+        background-color: #f8fafc;
+        border-bottom: 1px solid #edf2f7;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .main-header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .status-badge {
+        padding: 0.35rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-pending {
+        background-color: #fed7aa;
+        color: #9a3412;
+    }
+    
+    .status-approved, .status-accepted {
+        background-color: #bbf7d0;
+        color: #166534;
+    }
+    
+    .status-rejected {
+        background-color: #fecaca;
+        color: #b91c1c;
+    }
+    
+    .status-interviewing {
+        background-color: #bfdbfe;
+        color: #1e40af;
+    }
+    
+    .detail-section {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #edf2f7;
+    }
+    
+    .detail-section h2 {
+        font-size: 1.25rem;
+        color: #2d3748;
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+    }
+    
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.25rem;
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .label {
+        font-weight: 500;
+        color: #4a5568;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .score-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .score-value-large {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #3b82f6;
+        margin-bottom: 1rem;
+    }
+    
+    .score-bar {
+        height: 12px;
+        background-color: #e2e8f0;
+        border-radius: 9999px;
+        overflow: hidden;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .score-fill {
+        height: 100%;
+        background-color: #3b82f6;
+        border-radius: 9999px;
+    }
+    
+    .actions-container {
+        padding: 1.5rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .status-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn.primary {
+        background-color: #3b82f6;
+        color: white;
+    }
+    
+    .btn.primary:hover {
+        background-color: #2563eb;
+    }
+    
+    .btn.secondary {
+        background-color: #e2e8f0;
+        color: #4a5568;
+    }
+    
+    .btn.secondary:hover {
+        background-color: #cbd5e1;
+    }
+    
+    .btn.success {
+        background-color: #10b981;
+        color: white;
+    }
+    
+    .btn.success:hover {
+        background-color: #059669;
+    }
+    
+    .btn.danger {
+        background-color: #ef4444;
+        color: white;
+    }
+    
+    .btn.danger:hover {
+        background-color: #dc2626;
+    }
+    
+    @media (max-width: 640px) {
+        .main-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .actions-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .status-actions {
+            flex-direction: column;
+        }
+    }
+</style>
