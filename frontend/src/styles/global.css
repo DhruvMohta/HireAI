@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+
+:root {
+  --primary: #3a86ff;
+  --dark: #2b2d42;
+  --light: #f8f9fa;
+  --accent: #ff6b6b;
+  --gray: #6c757d;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
+  color: var(--dark);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary);
+  font-size: 2.5rem;
+}
+
+.job-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.job-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-5px);
+}
+
+.job-card h2 {
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 1.4rem;
+}
+
+.location {
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.icon {
+  margin-right: 0.5rem;
+}
+
+.description {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.apply-btn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.apply-btn:hover {
+  background-color: #2a75ff;
+}
+
+@media (max-width: 768px) {
+  .job-list {
+    grid-template-columns: 1fr;
+  }
+}

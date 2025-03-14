@@ -1,0 +1,235 @@
+---
+// SingleJobOffer.astro - Display detailed information about a specific job offer
+
+// export interface Props {
+//     title: string;
+//     company: string;
+//     location: string;
+//     jobType: string;
+//     salary: string;
+//     postDate: string;
+//     deadline: string;
+//     description: string;
+//     requirements: string[];
+//     benefits: string[];
+//     companyLogo?: string;
+//     applicationUrl: string;
+//     experienceLevel: string;
+// }
+
+const {
+    // id,
+    title,
+    company,
+    location,
+    jobType,
+    salary,
+    postDate,
+    deadline,
+    description,
+    requirements,
+    benefits,
+    companyLogo = '/astro.svg',
+    applicationUrl,
+    experienceLevel,
+} =  {
+    // id: "0",
+    title: "Senior Software Engineer",
+    company: "Tech Innovators Inc.",
+    location: "San Francisco, CA",
+    jobType: "Full-time",
+    salary: "$120,000 - $150,000",
+    postDate: "2023-10-01",
+    deadline: "2023-11-01",
+    description: "<p>We are looking for a Senior Software Engineer to join our team...</p>",
+    requirements: [
+        "Bachelor's degree in Computer Science or related field",
+        "5+ years of experience in software development",
+        "Proficiency in JavaScript, React, and Node.js",
+        "Strong problem-solving skills"
+    ],
+    benefits: [
+        "Health, dental, and vision insurance",
+        "401(k) with company match",
+        "Flexible work hours",
+        "Remote work options"
+    ],
+    // companyLogo: "/images/tech-innovators-logo.png",
+    applicationUrl: "https://techinnovators.com/careers/apply",
+    experienceLevel: "Senior"
+
+} //Astro.props;
+
+// Format dates for better display
+const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
+
+
+const {id} = Astro.params;
+---
+
+<div class="job-offer-container">
+    <div class="job-header">
+        <div class="logo-container">
+            <img src={companyLogo} alt={`${company} logo`} class="company-logo" />
+        </div>
+        <div class="title-container">
+            <h1>{title} {id}</h1>
+            <h2>{company}</h2>
+            <div class="job-meta">
+                <span class="location"><i class="fas fa-map-marker-alt"></i> {location}</span>
+                <span class="job-type"><i class="fas fa-briefcase"></i> {jobType}</span>
+                <span class="experience"><i class="fas fa-user-graduate"></i> {experienceLevel}</span>
+            </div>
+        </div>
+        <div class="salary-container">
+            <div class="salary">{salary}</div>
+            <a href="apply" class="apply-button">Apply Now</a>
+        </div>
+    </div>
+
+    <div class="job-details">
+        <div class="dates">
+            <p><strong>Posted:</strong> {formatDate(postDate)}</p>
+            <p><strong>Apply by:</strong> {formatDate(deadline)}</p>
+        </div>
+
+        <div class="description-section">
+            <h3>Job Description</h3>
+            <div set:html={description}></div>
+        </div>
+
+        <div class="requirements-section">
+            <h3>Requirements</h3>
+            <ul>
+                {requirements.map(req => <li>{req}</li>)}
+            </ul>
+        </div>
+
+        <div class="benefits-section">
+            <h3>Benefits</h3>
+            <ul>
+                {benefits.map(benefit => <li>{benefit}</li>)}
+            </ul>
+        </div>
+    </div>
+
+    <div class="application-footer">
+        <a href="apply" class="apply-button large">Apply for this position</a>
+    </div>
+</div>
+
+<style>
+    .job-offer-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .job-header {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1.5rem;
+        align-items: center;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .company-logo {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+    }
+
+    .title-container h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #333;
+    }
+
+    .title-container h2 {
+        margin: 0.5rem 0;
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .job-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .salary {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #2c7be5;
+        text-align: right;
+        margin-bottom: 1rem;
+    }
+
+    .apply-button {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background: #2c7be5;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+
+    .apply-button:hover {
+        background: #1a68d1;
+    }
+
+    .apply-button.large {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .job-details {
+        margin-top: 2rem;
+    }
+
+    .dates {
+        display: flex;
+        justify-content: space-between;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    h3 {
+        margin: 1.5rem 0 1rem;
+        color: #333;
+        font-size: 1.3rem;
+    }
+
+    .description-section, .requirements-section, .benefits-section {
+        margin-bottom: 2rem;
+    }
+
+    ul {
+        padding-left: 1.5rem;
+    }
+
+    li {
+        margin-bottom: 0.5rem;
+    }
+
+    .application-footer {
+        margin-top: 3rem;
+        text-align: center;
+    }
+</style></div>

@@ -1,0 +1,23 @@
+---
+const jobOffers = [
+  { title: 'Software Engineer', location: 'New York, NY', description: 'Develop and maintain web applications.' },
+  { title: 'Product Manager', location: 'San Francisco, CA', description: 'Oversee product development from ideation to launch.' },
+  { title: 'UX Designer', location: 'Remote', description: 'Design user interfaces and improve user experience.' },
+];
+
+export const title = "Senior Software Engineer";
+---
+
+<div class="container">
+  <h1>Job Offers</h1>
+  <div class="job-list">
+    {jobOffers.map((job, index) => (
+      <div class="job-card">
+        <h2>{job.title}</h2>
+        <p class="location"><span class="icon">📍</span> {job.location}</p>
+        <p class="description">{job.description}</p>
+        <button class="apply-btn" onclick={`window.location.href='/job/${index}/info'`}>Apply Now</button>
+      </div>
+    ))}
+  </div>
+</div>
