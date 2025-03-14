@@ -75,6 +75,25 @@ npm run dev
 
 ## 📊 How It Works
 
+### Step 0: Job Application population
+- You must add your jobs via a post request to http://localhost:5001/jobs similar to this
+```json
+  {
+    "title": "Bomboclaat Engineer",
+    "location": "Leuven, BE",
+    "job_type": "Full-time",
+    "experience_level": "Junior",
+    "description": "We are looking for a skilled bomboclaat engineer to join our team.",
+    "salary": "€ 120k-300k",
+    "requirements": [
+        "Bachelor's degree in Computer Science or related field",
+        "3+ years of experience in software development",
+        "Proficiency in Patience and Sleep depravation"
+    ],
+    "deadline": "2025-04-01"
+}
+```
+
 ### Step 1: Job Application Submission
 - Candidates browse available job positions on the platform
 - They select a position and complete the application form
