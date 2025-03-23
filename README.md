@@ -22,8 +22,7 @@ HireAI is a GenAI application designed to help recruiters optimize their hiring 
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/Holy-Hack-2025/Team-9-Bomboclaat-PSI
-cd Team-9-Bomboclaat-PSI
+git clone https://github.com/DhruvMohta/HireAI.git
 ```
 
 2. Install backend dependencies:
